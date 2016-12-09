@@ -24,8 +24,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2016120901;
+$plugin->version   = 2016120902;
 $plugin->requires  = 2014051200;
 $plugin->component = 'local_course_announcement';
-$plugin->release   = '1.0 (Build 2016120900)';
+$plugin->release   = '1.02 (Build 2016120902)';
 $plugin->maturity   = MATURITY_RC;

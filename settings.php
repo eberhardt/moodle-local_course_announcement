@@ -26,10 +26,10 @@ defined('MOODLE_INTERNAL') || die();
 
 if ($ADMIN->locate("localplugins")) {
     $tmp = new admin_settingpage("course_announcement", get_string("pluginname", "local_course_announcement"));
-    $tmp->add(new admin_setting_configtextarea("local_course_announcement/message",
-                                               get_string("setting_message", "local_course_announcement"),
-                                               get_string("setting_message_info", "local_course_announcement"),
-                                               ""));
+    $tmp->add(new admin_setting_confightmleditor("local_course_announcement/message",
+                                                 get_string("setting_message", "local_course_announcement"),
+                                                 get_string("setting_message_info", "local_course_announcement"),
+                                                 ""));
     $tmp->add(new admin_setting_configcheckbox("local_course_announcement/visible",
                                                get_string("setting_visible", "local_course_announcement"),
                                                get_string("setting_visible_info", "local_course_announcement"),
