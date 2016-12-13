@@ -25,18 +25,24 @@
 defined('MOODLE_INTERNAL') || die();
 
 function local_course_announcement_notification () {
-    global $COURSE;
-    if (isset($COURSE) && $COURSE->id == 1) {
-        return true;
+    global $COURSE, $SITE;
+
+    $site = isset($SITE) ? $SITE : get_site();
+    if (isset($COURSE) && $COURSE->id != $site->id) {
+        $config = get_config("local_course_announcement");
+        if ($config->visible) {
+            //use context_course rather then context_system because of caching
+            $options = array("context" => context_course::instance($site->id), "trusted" => true, "para" => false);
+            $message = format_text($config->message, FORMAT_MOODLE, $options);
+            \core\notification::add($message, \core\output\notification::NOTIFY_INFO);
+            echo \html_writer::script("(function() {" .
+                                      "var notificationHolder = document.getElementById('user-notifications');" .
+                                      "if (!notificationHolder) { return; }" .
+                                      "notificationHolder.className += ' courseannouncement'" .
+                                      "})();"
+            );
+        }
     }
-    $config = get_config("local_course_announcement");
-    if ($config->visible) {
-        \core\notification::add($config->message, \core\output\notification::NOTIFY_INFO);
-        echo \html_writer::script("(function() {" .
-                                  "var notificationHolder = document.getElementById('user-notifications');" .
-                                  "if (!notificationHolder) { return; }" .
-                                  "notificationHolder.className += ' courseannouncement'" .
-                                  "})();"
-        );
-    }
+
+    return true;
 }
