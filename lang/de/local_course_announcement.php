@@ -25,7 +25,10 @@
 defined('MOODLE_INTERNAL') || die();
 
 $string['pluginname'] = 'Kurs-Ank&uuml;ndigung';
+$string['setting_category'] = 'Category Announcements';
+$string['setting_category_info'] = 'Enable course announcements by category';
 $string['setting_message'] = 'Ank&uuml;ndigungstext';
 $string['setting_message_info'] = 'Dieser Text wird vor jeglichem Kursinhalt angezeigt.';
+$string['setting_catmessage_info'] = 'This text will be shown on top of every course within this category.';
 $string['setting_visible'] = 'Sichtbar';
 $string['setting_visible_info'] = 'Ank&uuml;ndigungen ein-/ausschalten';
