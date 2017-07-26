@@ -23,17 +23,72 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
+include_once "toolbox.php";
 
 if ($ADMIN->locate("localplugins")) {
     $tmp = new admin_settingpage("course_announcement", get_string("pluginname", "local_course_announcement"));
-    $tmp->add(new admin_setting_confightmleditor("local_course_announcement/message",
+
+    //Toggle for category level course announcements
+    $tmp->add(new admin_setting_configcheckbox("local_course_announcement/categories",
+                                               get_string("setting_category", "local_course_announcement"),
+                                               get_string("setting_category_info", "local_course_announcement"),
+                                               false));
+
+   //check category setting and build page appropriately
+   if (get_config("local_course_announcement", "categories")) {
+
+	// Get all category IDs and their names.  Borrowed with thanks from theme_essential.
+            $coursecats = get_categories_list();
+
+    // Iterate through catagories and create settings.
+      foreach ($coursecats as $key => $value) {
+	if ($value->depth == 1) {
+		$namepath = join(' / ', $value->namechunks);
+		$announcestring = get_string("setting_message", "local_course_announcement");
+		$announcedesc = get_string("setting_catmessage_info", "local_course_announcement");
+		$catvisible = get_string("setting_visible", "local_course_announcement");
+
+		//Site Wide Announcement
+		$tmp->add(new admin_setting_confightmleditor("local_course_announcement/message",
                                                  get_string("setting_message", "local_course_announcement"),
                                                  get_string("setting_message_info", "local_course_announcement"),
                                                  ""));
-    $tmp->add(new admin_setting_configcheckbox("local_course_announcement/visible",
+       		$tmp->add(new admin_setting_configcheckbox("local_course_announcement/visible",
                                                get_string("setting_visible", "local_course_announcement"),
                                                get_string("setting_visible_info", "local_course_announcement"),
                                                false));
 
-    $ADMIN->add("localplugins", $tmp);
+
+		//Build category announcement settings
+		$name = "local_course_announcement/coursecatmessage";
+		$title = $namepath." ".$announcestring;
+		$description = get_string("setting_catmessage_info", "local_course_announcement", array("category" => $namepath));
+		$default = '';
+        	$setting = new admin_setting_confightmleditor($name.$key, $title, $description, $default);
+		$tmp->add($setting);
+
+		//Build catogory announcement toggle settings
+		$name = "local_course_announcement/setting_visible";
+                $title = $namepath." ".$catvisible;
+                $description = get_string("setting_visible_info", "local_course_announcement", array("category" => $namepath));
+		$default = false;
+                $setting = new admin_setting_configcheckbox($name.$key, $title, $description, $default);
+                $tmp->add($setting);
+	}
+     }
+
+   $ADMIN->add("localplugins", $tmp);
+
+   } else {
+       $tmp->add(new admin_setting_confightmleditor("local_course_announcement/message",
+                                                 get_string("setting_message", "local_course_announcement"),
+                                                 get_string("setting_message_info", "local_course_announcement"),
+                                                 ""));
+       $tmp->add(new admin_setting_configcheckbox("local_course_announcement/visible",
+                                               get_string("setting_visible", "local_course_announcement"),
+                                               get_string("setting_visible_info", "local_course_announcement"),
+                                               false));
+
+       $ADMIN->add("localplugins", $tmp);
+   }
 }
