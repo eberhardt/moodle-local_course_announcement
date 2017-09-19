@@ -7,7 +7,7 @@ Usage
 =====
 
 Go to 'Site administration' > 'Plugins' > 'Local Plugins' > 'Course Announcement' and turn course announcment on (visible).
-You can define the message there as well.
+You can define the message there as well, which will be displayed in Moodle Format.
 
 Styling
 =======
